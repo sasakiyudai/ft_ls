@@ -1,0 +1,158 @@
+#!/bin/bash
+ARG=$@
+
+#color
+_RED="\033[31m"
+_GREEN="\033[32m"
+_END="\033[0m"
+
+#setup
+make
+mkdir tmp
+
+#check function
+check () {
+	ls -1   $1 >& tmp/original_tmp_tmp;
+	./ft_ls $1 >& tmp/mine_tmp;
+
+	#trim "ls: "
+	cat tmp/original_tmp_tmp | sed 's/^ls: //' > tmp/original_tmp
+	#remove padding
+	cat tmp/original_tmp | tr -s "\n " > tmp/original
+	cat tmp/mine_tmp | tr -s "\n " > tmp/mine
+
+	#check diff
+	diff tmp/original tmp/mine > /dev/null;
+	if [ $? = 0 ]; then
+		printf "\n"
+		echo $1
+		printf ":${_GREEN}PASS${_END}\n" 2> /dev/null;
+	else
+		printf "\n"
+		echo $1
+		printf ":${_RED}FAILURE${_END}\n" 2> /dev/null;
+		rm -rf tmp;
+		exit 1;
+	fi
+
+	# check memory leak
+	if [ "$ARG" = "-m" ]; then
+		valgrind ./ft_ls $1 >& tmp/leak_tmp
+		bytes=`grep definitely tmp/leak_tmp | sed 's/.*: \([0-9]*\).*/\1/'`
+		test ${bytes} = 0
+		if [ $? = 0 ]; then
+			printf ":${_GREEN}NO LEAK${_END}\n" 2> /dev/null;
+		else
+			printf ":${_RED}LEAK DETECTED${_END}\n" 2> /dev/null;
+			rm -rf tmp;
+			exit 1;
+		fi
+	fi
+}
+
+#case
+check ""
+check "."
+check "/"
+check "./././."
+check "./../../."
+check "test_folder"
+check "test_folder/aaa test_folder/bbb"
+check "Makefile test_folder/aaa"
+check "Makefile Makefile"
+check "Makefile Makefile test_folder/aaa"
+check "test_folder/aaa Makefile"
+check "zzz yyy test_folder/ccc xyz wwww "
+check "wwwwwwwwwwww ww ww   fjeoaj test_folder/aaa"
+check "test_folder/bbb Makefile test_folder/cccw test_folder/ccc test_folder/aaa jeoaj test_folder/aaa"
+check "README.md test_folder/aaa README.md test_folder/aaa test_folder/ccc Makefile"
+
+check "-R "
+check "-R ."
+# check "-R /"         may too many
+check "-R ./././."
+# check "-R ./../../." may too many
+check "-R test_folder"
+check "-R test_folder/aaa test_folder/bbb"
+check "-R Makefile test_folder/aaa"
+check "-R Makefile Makefile"
+check "-R Makefile Makefile test_folder/aaa"
+check "-R test_folder/aaa Makefile"
+check "-R zzz yyy test_folder/ccc xyz wwww "
+check "-R wwwwwwwwwwww ww ww   fjeoaj test_folder/aaa"
+check "-R test_folder/bbb Makefile test_folder/cccw test_folder/ccc test_folder/aaa jeoaj test_folder/aaa"
+check "-R README.md test_folder/aaa README.md test_folder/aaa test_folder/ccc Makefile"
+
+check "-a "
+check "-a ."
+check "-a /"
+check "-a ./././."
+check "-a ./../../."
+check "-a test_folder"
+check "-a test_folder/aaa test_folder/bbb"
+check "-a Makefile test_folder/aaa"
+check "-a Makefile Makefile"
+check "-a Makefile Makefile test_folder/aaa"
+check "-a test_folder/aaa Makefile"
+check "-a zzz yyy test_folder/ccc xyz wwww "
+check "-a wwwwwwwwwwww ww ww   fjeoaj test_folder/aaa"
+check "-a test_folder/bbb Makefile test_folder/cccw test_folder/ccc test_folder/aaa jeoaj test_folder/aaa"
+check "-a README.md test_folder/aaa README.md test_folder/aaa test_folder/ccc Makefile"
+
+check "-t "
+check "-t ."
+check "-t /"
+check "-t ./././."
+check "-t ./../../."
+check "-t test_folder"
+check "-t test_folder/aaa"
+check "-t test_folder/bbb"
+check "-t test_folder/aaa test_folder/bbb"
+check "-t Makefile test_folder/aaa"
+check "-t Makefile Makefile"
+check "-t Makefile Makefile test_folder/aaa"
+check "-t test_folder/aaa Makefile"
+check "-t zzz yyy test_folder/ccc xyz wwww "
+check "-t wwwwwwwwwwww ww ww   fjeoaj test_folder/aaa"
+check "-t test_folder/bbb Makefile test_folder/cccw test_folder/ccc test_folder/aaa jeoaj test_folder/aaa"
+check "-t README.md test_folder/aaa README.md test_folder/aaa test_folder/ccc Makefile"
+
+check "-r "
+check "-r ."
+check "-r /"
+check "-r ./././."
+check "-r ./../../."
+check "-r test_folder"
+check "-r test_folder/aaa"
+check "-r test_folder/bbb"
+check "-r test_folder/aaa test_folder/bbb"
+check "-r Makefile test_folder/aaa"
+check "-r Makefile Makefile"
+check "-r Makefile Makefile test_folder/aaa"
+check "-r test_folder/aaa Makefile"
+check "-r zzz yyy test_folder/ccc xyz wwww "
+check "-r wwwwwwwwwwww ww ww   fjeoaj test_folder/aaa"
+check "-r test_folder/bbb Makefile test_folder/cccw test_folder/ccc test_folder/aaa jeoaj test_folder/aaa"
+check "-r README.md test_folder/aaa README.md test_folder/aaa test_folder/ccc Makefile"
+
+check "-l "
+check "-l ."
+check "-l /"
+check "-l ./././."
+check "-l ./../../."
+check "-l test_folder"
+check "-l test_folder/aaa"
+check "-l test_folder/bbb"
+check "-l test_folder/aaa test_folder/bbb"
+check "-l Makefile test_folder/aaa"
+check "-l Makefile Makefile"
+check "-l Makefile Makefile test_folder/aaa"
+check "-l test_folder/aaa Makefile"
+check "-l zzz yyy test_folder/ccc xyz wwww "
+check "-l wwwwwwwwwwww ww ww   fjeoaj test_folder/aaa"
+check "-l test_folder/bbb Makefile test_folder/cccw test_folder/ccc test_folder/aaa jeoaj test_folder/aaa"
+check "-l README.md test_folder/aaa README.md test_folder/aaa test_folder/ccc Makefile"
+
+#teardown
+rm -rf tmp leak_tmp;
+printf "${_GREEN}SUCCESS ${_END} \n"

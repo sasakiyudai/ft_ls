@@ -1,0 +1,31 @@
+==19426== Memcheck, a memory error detector
+==19426== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==19426== Using Valgrind-3.18.0.GIT-lbmacos and LibVEX; rerun with -h for copyright info
+==19426== Command: ./a.out -t wwwwwwwwwwww ww ww fjeoaj aaa
+==19426== 
+fjeoaj: No such file or directory
+ww: No such file or directory
+ww: No such file or directory
+wwwwwwwwwwww: No such file or directory
+aaa:
+mine
+original
+original_tmp
+mine_tmp
+original_tmp_tmp
+aaaaaaaa
+a
+==19426== 
+==19426== HEAP SUMMARY:
+==19426==     in use at exit: 18,361 bytes in 162 blocks
+==19426==   total heap usage: 192 allocs, 30 frees, 49,841 bytes allocated
+==19426== 
+==19426== LEAK SUMMARY:
+==19426==    definitely lost: 0 bytes in 0 blocks
+==19426==    indirectly lost: 0 bytes in 0 blocks
+==19426==      possibly lost: 0 bytes in 0 blocks
+==19426==    still reachable: 0 bytes in 0 blocks
+==19426==         suppressed: 18,361 bytes in 162 blocks
+==19426== 
+==19426== For lists of detected and suppressed errors, rerun with: -s
+==19426== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 4 from 4)

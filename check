@@ -17,12 +17,12 @@ check () {
 
 	#trim "ls: "
 	cat tmp/original_tmp_tmp | sed 's/^ls: //' > tmp/original_tmp
-	#remove padding
-	cat tmp/original_tmp | tr -s "\n " > tmp/original
-	cat tmp/mine_tmp | tr -s "\n " > tmp/mine
+	#remove padding and ACL
+	cat tmp/original_tmp | tr -s "\n " | tr -d "@+" > tmp/original
+	cat tmp/mine_tmp | tr -s "\n " | tr -d "@+" > tmp/mine
 
 	#check diff
-	diff tmp/original tmp/mine > /dev/null;
+	diff -w tmp/original tmp/mine > /dev/null;
 	if [ $? = 0 ]; then
 		printf "\n"
 		echo $1
@@ -31,7 +31,7 @@ check () {
 		printf "\n"
 		echo $1
 		printf ":${_RED}FAILURE${_END}\n" 2> /dev/null;
-		rm -rf tmp;
+		# rm -rf tmp;
 		exit 1;
 	fi
 
@@ -44,7 +44,7 @@ check () {
 			printf ":${_GREEN}NO LEAK${_END}\n" 2> /dev/null;
 		else
 			printf ":${_RED}LEAK DETECTED${_END}\n" 2> /dev/null;
-			rm -rf tmp;
+			# rm -rf tmp;
 			exit 1;
 		fi
 	fi
@@ -154,5 +154,5 @@ check "-l test_folder/bbb Makefile test_folder/cccw test_folder/ccc test_folder/
 check "-l README.md test_folder/aaa README.md test_folder/aaa test_folder/ccc Makefile"
 
 #teardown
-rm -rf tmp leak_tmp;
+# rm -rf tmp leak_tmp;
 printf "${_GREEN}SUCCESS ${_END} \n"

@@ -760,11 +760,7 @@ static void list_dir(struct dir_path *base) {
   }
   closedir(dir);
   sort_list(&list);
-  if (long_format) {
-    printf("total %u\n", block_size);
-    block_size = 0;
-  }
-  block_size = 0;
+  bool total_printed = true;
   for (i = 0; i < list.used; i++) {
     struct info *info = list.array[i];
     if (recursive && S_ISDIR(info->stat.st_mode)) {
@@ -775,6 +771,11 @@ static void list_dir(struct dir_path *base) {
         subque->next = new_dir_path(path, base->depth + 1, subque->next);
         subque = subque->next;
       }
+    }
+    if (long_format && total_printed) {
+      printf("total %u\n", block_size);
+      block_size = 0;
+      total_printed = false;
     }
     print_info(info);
   }

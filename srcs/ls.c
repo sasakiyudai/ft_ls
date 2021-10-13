@@ -358,9 +358,9 @@ static void print_group(gid_t gid) {
  */
 static void get_time_string(char *str, time_t time) {
   if (time - half_year_ago > 0) {
-    strftime(str, 12, "%b %d %H:%M", localtime(&time));
+    strftime(str, 12, "%m %d %H:%M", localtime(&time));
   } else {
-    strftime(str, 12, "%b %d  %Y", localtime(&time));
+    strftime(str, 12, "%m %d  %Y", localtime(&time));
   }
 }
 

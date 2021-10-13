@@ -358,9 +358,9 @@ static void print_group(gid_t gid) {
  */
 static void get_time_string(char *str, time_t time) {
   if (time - half_year_ago > 0) {
-    strftime(str, 12, "%m %d %H:%M", localtime(&time));
+    strftime(str, 12, "%b %e %H:%M", localtime(&time));
   } else {
-    strftime(str, 12, "%m %d  %Y", localtime(&time));
+    strftime(str, 12, "%b %e  %Y", localtime(&time));
   }
 }
 
@@ -649,7 +649,7 @@ static void sort_argv(int argc, char **argv, bool error_print) {
  */
 static void print_info(struct info *info) {
   if (long_format) {
-    char buf[12];
+    char buf[13];
     get_mode_string(info->stat.st_mode, buf);
     printf("%s ", buf);
     printf("%3d ", (int)info->stat.st_nlink);

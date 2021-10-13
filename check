@@ -8,21 +8,21 @@ _END="\033[0m"
 
 #setup
 make
-mkdir tmp
+mkdir ../tmp
 
 #check function
 check () {
-	ls -1   $1 >& tmp/original_tmp_tmp;
-	./ft_ls $1 >& tmp/mine_tmp;
+	ls -1   $1 >& ../tmp/original_tmp_tmp;
+	./ft_ls $1 >& ../tmp/mine_tmp;
 
 	#trim "ls: "
-	cat tmp/original_tmp_tmp | sed 's/^ls: //' > tmp/original_tmp
+	cat ../tmp/original_tmp_tmp | sed 's/^ls: //' > ../tmp/original_tmp
 	#remove padding and ACL
-	cat tmp/original_tmp | tr -s "\n " | tr -d "@+" > tmp/original
-	cat tmp/mine_tmp | tr -s "\n " | tr -d "@+" > tmp/mine
+	cat ../tmp/original_tmp | tr -s "\n " | tr -d "@+" > ../tmp/original
+	cat ../tmp/mine_tmp | tr -s "\n " | tr -d "@+" > ../tmp/mine
 
 	#check diff
-	diff -w tmp/original tmp/mine > /dev/null;
+	diff -w ../tmp/original ../tmp/mine > /dev/null;
 	if [ $? = 0 ]; then
 		printf "\n"
 		echo $1
@@ -37,8 +37,8 @@ check () {
 
 	# check memory leak
 	if [ "$ARG" = "-m" ]; then
-		valgrind ./ft_ls $1 >& tmp/leak_tmp
-		bytes=`grep definitely tmp/leak_tmp | sed 's/.*: \([0-9]*\).*/\1/'`
+		valgrind ./ft_ls $1 >& ../tmp/leak_tmp
+		bytes=`grep definitely ../tmp/leak_tmp | sed 's/.*: \([0-9]*\).*/\1/'`
 		test ${bytes} = 0
 		if [ $? = 0 ]; then
 			printf ":${_GREEN}NO LEAK${_END}\n" 2> /dev/null;
@@ -82,5 +82,5 @@ do_cases "-r"
 do_cases "-l"
 
 #teardown
-# rm -rf tmp leak_tmp;
+# rm -rf ../tmp leak_tmp;
 printf "${_GREEN}SUCCESS ${_END} \n"

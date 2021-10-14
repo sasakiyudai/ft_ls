@@ -70,6 +70,7 @@ do_cases() {
 	check "${1} wwwwwwwwwwww ww ww   fjeoaj test_folder/aaa"
 	check "${1} test_folder/bbb Makefile test_folder/cccw test_folder/ccc test_folder/aaa jeoaj test_folder/aaa"
 	check "${1} README.md test_folder/aaa README.md test_folder/aaa test_folder/ccc Makefile"
+	check "${1} README.md test_folder/aaa README.md test_folder/aaa ccc Makefile"
 }
 
 #case

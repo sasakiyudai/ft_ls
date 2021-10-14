@@ -529,15 +529,14 @@ static void reverse_list(struct info_list *list, size_t size) {
 }
 
 static void reverse_argv(char **argv, size_t size) {
+  size_t remain = size;
   size_t i = 0;
 
   while (i < size && is_dir(argv[i]) == false) {
     ++i;
-    --size;
+    --remain;
   }
-  // printf("i=%zu, size=%zu\n", i, size);
   size_t start = i;
-
 
   for (i = 0; i < start/2; ++i) {
     char *tmp = argv[i];
@@ -546,16 +545,11 @@ static void reverse_argv(char **argv, size_t size) {
   }
 
   i = 0;
-  // while (argv[i]) {
-  //   printf("argv[%zu]=%s\n", i, argv[i]);
-  //   ++i;
-  // }
-  // i = 0;
 
-  for (i = start; i < start + size / 2; ++i) {
+  for (i = start; i < start + remain / 2; ++i) {
     char *tmp = argv[i];
-    argv[i] = argv[start+size-(i-start)-1];
-    argv[start+size-(i-start)-1] = tmp;
+    argv[i] = argv[start+remain-(i-start)-1];
+    argv[start+remain-(i-start)-1] = tmp;
   }
 }
 
